@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #map {
+          height: 90%;
+        }
+        html, body {
+          height: 96%;
+          margin: 20;
+          padding: 30;
+        }
+    </style>
+</head>
+<body>
+    <h1>疫情地图</h1>
+    <div id="map"></div>
+    <script>
+        var map;
+        function initMap() {
+            var uluru = {lat: 137.344, lng: 105.036};
+            var map = new google.maps.Map(
+            document.getElementById('map'), {
+                zoom: 4, 
+                center: uluru
+            });
+            var beijing = {lat: 39.84, lng: 116.45};
+            //var marker = new google.maps.Marker({position: beijing, map: map});
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    infoWindow.setPosition(pos);
+                    //infoWindow.setContent('Your Position:lat:'+ pos.lat + ',lng:'+ pos.lng);
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                    var taiyuan = {
+                        lat: 37.777,
+                        lng: 112.555
+                    };
+                    infoWindow.setPosition(taiyuan);
+                    infoWindow.setContent('<h1 id="firstHeading" class="firstHeading">山西大医院</h1>'+'<div id="bodyContent">'+
+                        '<p>地址：太原市龙城大街99号<\p><p>邮编：030032<\p><p>医院电话：0351-8368114<\p><p>网址：http://www.sxbqeh.com.cn<\p>');
+                    infoWindow.open(map);
+                    map.setCenter(taiyuan);
+                    map.zoom = 14;
+                    var marker = new google.maps.Marker({position: taiyuan, map: map});
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+       
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    </script>
+</body>
+</html>
